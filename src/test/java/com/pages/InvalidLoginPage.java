@@ -1,0 +1,369 @@
+package com.pages;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.bidi.browsingcontext.Locator;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.objectrepository.Locators;
+import com.setup.BaseSteps;
+import com.setup.Reporter;
+
+public class InvalidLoginPage {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private ExtentTest extTest;
+
+    public InvalidLoginPage(WebDriver driver, ExtentTest extTest) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.extTest = extTest;
+    }
+    
+    // ---------------- Invalid Login Methods ---------------- //
+    public boolean clickPhoneNumber1() {
+        try {
+            WebElement phoneInput = wait.until(ExpectedConditions.elementToBeClickable(Locators.phonenumber));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", phoneInput);
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Clicked on phone number input field");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click on phone number input field: " + e.getMessage());
+            return false;
+        }
+    }
+
+    
+    public boolean switchToLoginTab1() {
+        try {
+            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Switched to Login Tab");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to switch to Login Tab: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean clickLoginBtn1() {
+        try {
+            WebElement loginBtn = wait.until(ExpectedConditions.elementToBeClickable(Locators.homeLoginBtn));
+
+            // Scroll into view & click via JS (if normal click fails)
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", loginBtn);
+            loginBtn.click();
+
+            BaseSteps.sleep(); // short wait after click
+            Reporter.generateReport(driver, extTest, Status.PASS, "Clicked on Home Login button");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click Home Login button: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean clickInnerLoginBtn1() {
+        try {
+            WebElement innerLogin = wait.until(ExpectedConditions.elementToBeClickable(Locators.innerLoginBtn));
+            innerLogin.click();
+            BaseSteps.sleep();
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Clicked on Inner Login button");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click Inner Login button: " + e.getMessage());
+            return false;
+        }
+    }
+
+    
+ // Enter invalid mobile dynamically
+    public boolean enterInvalidMobile(String phone, String captcha) {
+        try {
+            WebElement phoneInput = wait.until(ExpectedConditions.elementToBeClickable(Locators.phonenumber));
+            phoneInput.clear();
+            phoneInput.sendKeys(phone);  
+            driver.findElement(Locators.captacha).sendKeys(captcha); 
+            driver.findElement(Locators.nextbtn).click();
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Entered invalid mobile: " + phone);
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed in enterInvalidMobile(): " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Enter mobile without captcha dynamically
+    public boolean enterMobileWithoutCaptcha(String phone) {
+        try {
+            WebElement phoneInput = wait.until(ExpectedConditions.elementToBeClickable(Locators.phonenumber));
+            phoneInput.clear();
+            phoneInput.sendKeys(phone);
+            driver.findElement(Locators.nextbtn).click();
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Tried login without captcha using: " + phone);
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed in enterMobileWithoutCaptcha(): " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean enterMobileAndCaptcha(String mobile, String captcha) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+            WebElement phone = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("emailOrMobile")));
+            phone.clear();
+            phone.sendKeys(mobile);
+
+            WebElement captchaInput = driver.findElement(Locators.captacha); 
+            captchaInput.clear();
+            captchaInput.sendKeys(captcha);
+
+            driver.findElement(By.id("btnStep1")).click();
+            System.out.println("******* Entered mobile + captcha and clicked Next");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean enterInvalidOtp(String otp) {
+        try {
+            // Enter each digit in separate input fields
+            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp1)).sendKeys(otp.substring(0, 1));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp2)).sendKeys(otp.substring(1, 2));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp3)).sendKeys(otp.substring(2, 3));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp4)).sendKeys(otp.substring(3, 4));
+
+            // Click Continue
+            wait.until(ExpectedConditions.elementToBeClickable(Locators.continuebtn)).click();
+
+            // Optional: Close any popup that might appear
+            wait.until(ExpectedConditions.elementToBeClickable(Locators.closepopup)).click();
+
+            // Log success (optional for invalid OTP)
+            Reporter.generateReport(driver, extTest, Status.PASS, "Entered invalid OTP: " + otp);
+            return true;
+
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to enter invalid OTP: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+
+    public boolean clickNextWithoutDetails() {
+        try {
+            driver.findElement(Locators.nextbtn).click();
+            Reporter.generateReport(driver, extTest, Status.PASS, "Clicked Next without entering details");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed in clickNextWithoutDetails(): " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ---------------- Error Message Handling ---------------- //
+
+
+    public boolean getNumErrorMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'Mobile') or contains(text(),'phone')]")
+            ));
+
+            String actualError = errorElement.getText().trim().toLowerCase();
+            System.out.println("Captured mobile error: " + actualError);
+
+            List<String> expectedErrors = Arrays.asList(
+                "enter mobile", 
+                "valid phone", 
+                "phone number required"
+            );
+
+            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
+            if (matched) {
+                extTest.log(Status.PASS, "Invalid mobile number error displayed: " + actualError);
+            } else {
+                extTest.log(Status.FAIL, "Unexpected mobile error: " + actualError);
+            }
+            return matched;
+        } catch (Exception e) {
+            extTest.log(Status.FAIL, "No error message found for mobile number");
+            return false;
+        }
+    }
+
+    // Validate invalid OTP error
+    public boolean getOtpErrorMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'OTP')]")
+            ));
+
+            String actualError = errorElement.getText().trim().toLowerCase();
+            System.out.println("Captured OTP error: " + actualError);
+
+            List<String> expectedErrors = Arrays.asList(
+                "enter otp", 
+                "valid otp", 
+                "otp required"
+            );
+
+            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
+            if (matched) {
+                extTest.log(Status.PASS, "Invalid OTP error displayed: " + actualError);
+            } else {
+                extTest.log(Status.FAIL, "Unexpected OTP error: " + actualError);
+            }
+            return matched;
+        } catch (Exception e) {
+            extTest.log(Status.FAIL, "No error message found for OTP");
+            return false;
+        }
+    }
+
+    // Validate captcha error
+    public boolean getCaptchaErrorMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'captcha') or contains(text(),'Captcha')]")
+            ));
+
+            String actualError = errorElement.getText().trim().toLowerCase();
+            System.out.println("Captured captcha error: " + actualError);
+
+            List<String> expectedErrors = Arrays.asList(
+                "enter captcha", 
+                "captcha required", 
+                "invalid captcha"
+            );
+
+            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
+            if (matched) {
+                extTest.log(Status.PASS, "Captcha error displayed: " + actualError);
+            } else {
+                extTest.log(Status.FAIL, "Unexpected captcha error: " + actualError);
+            }
+            return matched;
+        } catch (Exception e) {
+            extTest.log(Status.FAIL, "No error message found for captcha");
+            return false;
+        }
+    }
+
+    // Validate mandatory field error
+    public boolean getMandatoryFieldErrorMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'required') or contains(text(),'mandatory')]")
+            ));
+
+            String actualError = errorElement.getText().trim().toLowerCase();
+            System.out.println("Captured mandatory field error: " + actualError);
+
+            List<String> expectedErrors = Arrays.asList(
+                "required", 
+                "mandatory", 
+                "cannot be empty"
+            );
+
+            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
+            if (matched) {
+                extTest.log(Status.PASS, "Mandatory field error displayed: " + actualError);
+            } else {
+                extTest.log(Status.FAIL, "Unexpected mandatory error: " + actualError);
+            }
+            return matched;
+        } catch (Exception e) {
+            extTest.log(Status.FAIL, "No error message found for mandatory field");
+            return false;
+        }
+    }
+    public boolean validateMandatoryFieldMessage(By locator, String expectedMsg) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+
+            // Get browser-native validation message
+            String actualMsg = field.getAttribute("validationMessage");
+            System.out.println("Validation message from browser: " + actualMsg);
+
+            return actualMsg != null && actualMsg.contains(expectedMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+ // Validate invalid OTP error message
+    public boolean getInvalidOtpErrorMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+            // Wait for error message that might say "invalid", "incorrect", etc.
+            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'invalid') or contains(text(),'incorrect') or contains(text(),'wrong') or contains(text(),'please']")
+            ));
+
+            String actualError = errorElement.getText().trim().toLowerCase();
+            System.out.println("Captured invalid OTP error: " + actualError);
+
+            List<String> expectedErrors = Arrays.asList(
+                "invalid otp", 
+                "incorrect otp", 
+                "wrong otp", 
+                "please enter a valid otp", 
+                "Re-enter",
+                "otp you entered is invalid"
+            );
+
+            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
+            if (matched) {
+                extTest.log(Status.PASS, "Invalid OTP error message displayed: " + actualError);
+                return true;
+            } else {
+                extTest.log(Status.FAIL, "Unexpected OTP error message: " + actualError);
+                return false;
+            }
+
+//            return matched;
+
+        } catch (TimeoutException e) {
+            extTest.log(Status.FAIL, "OTP error message not displayed within time.");
+            return false;
+        } catch (Exception e) {
+            extTest.log(Status.FAIL, "Exception while verifying OTP error message: " + e.getMessage());
+            return false;
+        }
+    }
+
+    
+
+
+}

@@ -41,7 +41,7 @@ public class SearchHomePage {
     }
 
     // Select property type
-    public boolean selectPropertyType(String propertyType) {
+    public boolean selectPropertyType() {
         try {
             WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(Locators.clickPropertType));
             dropdown.click();
@@ -49,7 +49,7 @@ public class SearchHomePage {
             WebElement option = wait.until(ExpectedConditions.elementToBeClickable(Locators.selectPropertyType));
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", option);
 
-            Reporter.generateReport(driver, extTest, Status.PASS, "Selected property type: " + propertyType);
+            Reporter.generateReport(driver, extTest, Status.PASS, "Selected property type: ");
             return true;
         } catch (Exception e) {
             Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to select property type: " + e.getMessage());

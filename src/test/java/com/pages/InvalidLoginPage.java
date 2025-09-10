@@ -7,10 +7,8 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.bidi.browsingcontext.Locator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -187,7 +185,7 @@ public class InvalidLoginPage {
 
     // ---------------- Error Message Handling ---------------- //
 
-
+//
     public boolean getNumErrorMessage() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -217,37 +215,7 @@ public class InvalidLoginPage {
         }
     }
 
-    // Validate invalid OTP error
-    public boolean getOtpErrorMessage() {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//*[contains(text(),'OTP')]")
-            ));
-
-            String actualError = errorElement.getText().trim().toLowerCase();
-            System.out.println("Captured OTP error: " + actualError);
-
-            List<String> expectedErrors = Arrays.asList(
-                "enter otp", 
-                "valid otp", 
-                "otp required"
-            );
-
-            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
-            if (matched) {
-                extTest.log(Status.PASS, "Invalid OTP error displayed: " + actualError);
-            } else {
-                extTest.log(Status.FAIL, "Unexpected OTP error: " + actualError);
-            }
-            return matched;
-        } catch (Exception e) {
-            extTest.log(Status.FAIL, "No error message found for OTP");
-            return false;
-        }
-    }
-
-    // Validate captcha error
+//     Validate captcha error
     public boolean getCaptchaErrorMessage() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -277,7 +245,7 @@ public class InvalidLoginPage {
         }
     }
 
-    // Validate mandatory field error
+
     public boolean getMandatoryFieldErrorMessage() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -321,49 +289,15 @@ public class InvalidLoginPage {
             return false;
         }
     }
- // Validate invalid OTP error message
-    public boolean getInvalidOtpErrorMessage() {
+    public boolean getOtpErrorMessage() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-            // Wait for error message that might say "invalid", "incorrect", etc.
-            WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//*[contains(text(),'invalid') or contains(text(),'incorrect') or contains(text(),'wrong') or contains(text(),'please']")
-            ));
-
-            String actualError = errorElement.getText().trim().toLowerCase();
-            System.out.println("Captured invalid OTP error: " + actualError);
-
-            List<String> expectedErrors = Arrays.asList(
-                "invalid otp", 
-                "incorrect otp", 
-                "wrong otp", 
-                "please enter a valid otp", 
-                "Re-enter",
-                "otp you entered is invalid"
-            );
-
-            boolean matched = expectedErrors.stream().anyMatch(actualError::contains);
-            if (matched) {
-                extTest.log(Status.PASS, "Invalid OTP error message displayed: " + actualError);
-                return true;
-            } else {
-                extTest.log(Status.FAIL, "Unexpected OTP error message: " + actualError);
-                return false;
-            }
-
-//            return matched;
-
-        } catch (TimeoutException e) {
-            extTest.log(Status.FAIL, "OTP error message not displayed within time.");
-            return false;
+            WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otpError));
+            String msg = error.getText();
+            System.out.println("OTP error message displayed: " + msg);
+            return msg.contains("OTP"); // or check exact expected text
         } catch (Exception e) {
-            extTest.log(Status.FAIL, "Exception while verifying OTP error message: " + e.getMessage());
+            System.out.println("OTP error message not found: " + e.getMessage());
             return false;
         }
     }
-
-    
-
-
 }

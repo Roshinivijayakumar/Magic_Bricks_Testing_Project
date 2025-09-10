@@ -39,4 +39,7 @@ public class Locators {
      public static By shortlistedPropertyTitle = By.xpath("//*[@id=\"cardid81061849\"]/div/div[1]/div[2]/h2");
      public static By shortlistedPropertyCard = By.xpath("//*[@id=\"cardid80084779\"]/div/div[1]");
      public static By shortlistTabHeader = By.xpath("//*[@id=\"m-tab-Shortlisted\"]");
+     
+     public static By otpError = By.xpath("//div[@id='otp_error']");
+
 }

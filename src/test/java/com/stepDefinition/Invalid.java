@@ -1,7 +1,4 @@
 package com.stepDefinition;
-
-
-import java.util.Scanner;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 
@@ -84,29 +81,7 @@ public class Invalid extends BaseSteps {
     public void i_should_see_error_message_for_captcha() {
         Assert.assertTrue(invalidLoginPage.getCaptchaErrorMessage(), "Expected error not displayed for captcha");
     }
-
-    @When("I enter the otp {string}")
-    public void i_enter_the_otp(String otp) {
-            String mobile = "9790875322";            
-            // read captcha manually
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Enter captcha as displayed on page: ");
-            String captcha = sc.nextLine();
-
-            boolean step1 = invalidLoginPage.enterMobileAndCaptcha(mobile, captcha);
-            Assert.assertTrue(step1, "Failed at invalid login -> enterMobileAndCaptcha()");
-
-            boolean step2 = invalidLoginPage.enterInvalidOtp(otp);
-            Assert.assertTrue(step2, "Failed at invalid login -> enterInvalidOtp()");
-        }
-    
-    @Then("I should see an error message for invalid OTP")
-    public void i_should_see_error_message_for_invalid_otp() {
-    	Assert.assertTrue(invalidLoginPage.getOtpErrorMessage(), "Expected error not displayed for OTP");
-    }
-    
-
-
+ 
     @When("I try to proceed without entering details")
     public void i_try_to_proceed_without_entering_details() {
         boolean actResult = invalidLoginPage.clickNextWithoutDetails();

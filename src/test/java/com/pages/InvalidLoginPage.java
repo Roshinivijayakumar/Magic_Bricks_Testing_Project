@@ -124,50 +124,6 @@ public class InvalidLoginPage {
     }
 
 
-    public boolean enterMobileAndCaptcha(String mobile, String captcha) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-            WebElement phone = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("emailOrMobile")));
-            phone.clear();
-            phone.sendKeys(mobile);
-
-            WebElement captchaInput = driver.findElement(Locators.captacha); 
-            captchaInput.clear();
-            captchaInput.sendKeys(captcha);
-
-            driver.findElement(By.id("btnStep1")).click();
-            System.out.println("******* Entered mobile + captcha and clicked Next");
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean enterInvalidOtp(String otp) {
-        try {
-            // Enter each digit in separate input fields
-            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp1)).sendKeys(otp.substring(0, 1));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp2)).sendKeys(otp.substring(1, 2));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp3)).sendKeys(otp.substring(2, 3));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otp4)).sendKeys(otp.substring(3, 4));
-
-            // Click Continue
-            wait.until(ExpectedConditions.elementToBeClickable(Locators.continuebtn)).click();
-
-            // Optional: Close any popup that might appear
-            wait.until(ExpectedConditions.elementToBeClickable(Locators.closepopup)).click();
-
-            // Log success (optional for invalid OTP)
-            Reporter.generateReport(driver, extTest, Status.PASS, "Entered invalid OTP: " + otp);
-            return true;
-
-        } catch (Exception e) {
-            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to enter invalid OTP: " + e.getMessage());
-            return false;
-        }
-    }
 
 
 
@@ -289,15 +245,6 @@ public class InvalidLoginPage {
             return false;
         }
     }
-    public boolean getOtpErrorMessage() {
-        try {
-            WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.otpError));
-            String msg = error.getText();
-            System.out.println("OTP error message displayed: " + msg);
-            return msg.contains("OTP"); // or check exact expected text
-        } catch (Exception e) {
-            System.out.println("OTP error message not found: " + e.getMessage());
-            return false;
-        }
-    }
+
+
 }

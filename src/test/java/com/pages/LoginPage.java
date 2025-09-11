@@ -27,7 +27,7 @@ public class LoginPage extends BaseSteps {
 
     public LoginPage(WebDriver driver, ExtentTest extTest) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         this.extTest = extTest;
     }
 

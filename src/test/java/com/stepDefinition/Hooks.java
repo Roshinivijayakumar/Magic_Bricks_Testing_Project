@@ -13,10 +13,11 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.setup.BaseSteps;
 
+import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
-import io.cucumber.java.AfterStep;
 import io.cucumber.java.Scenario;
 
 public class Hooks extends BaseSteps {
@@ -24,7 +25,9 @@ public class Hooks extends BaseSteps {
     static ExtentSparkReporter spark;
     static ExtentReports extReports;
     public static ExtentTest extTest;
+    public static int currentrow = 0;
 
+   	public static int firstrow;
     @BeforeAll
     public static void setUpReportsAndBrowser() {
         cleanOldReports();
@@ -55,6 +58,24 @@ public class Hooks extends BaseSteps {
         // Create a test entry in Extent for each scenario
         extTest = extReports.createTest(scenario.getName());
     }
+//    @Before
+//    public void setUpScenario(Scenario scenario) {
+//        extTest = extReports.createTest(scenario.getName());
+//
+//        launchBrowser();
+//        driver.get("https://www.magicbricks.com/");
+//        System.out.println("🔄 Browser launched fresh for: " + scenario.getName());
+//    }
+//
+//    @After
+//    public void tearDownScenario() {
+//        if (driver != null) {
+//            driver.quit();
+//            driver = null;
+//            System.out.println("✅ Browser closed after scenario");
+//        }
+//    }
+
 
     // 📌 Step-level screenshots: captured immediately when a step fails
     @AfterStep

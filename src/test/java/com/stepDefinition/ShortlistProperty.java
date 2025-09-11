@@ -17,12 +17,19 @@ public class ShortlistProperty extends BaseSteps {
 	public void the_user_is_on_the_property_listing_page() {
 	    
 	}
-	@Given("clicks on sortby and selects most recent filter")
-	public void clicks_on_sortby_and_selects_most_recent_filter() {
-		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
-		boolean actResult = shortlistPage.sortByFilter();
-		Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
-	}
+//	@Given("clicks on sortby and selects most recent filter")
+//	public void clicks_on_sortby_and_selects_most_recent_filter() {
+//		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
+//		boolean actResult = shortlistPage.sortByFilter();
+//		Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
+//	}
+//	@When("clicks on sortby and selects most recent filter")
+//	public void clicks_on_sortby_and_selects_most_recent_filter() {
+//	    shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
+//	    boolean actResult = shortlistPage.sortByFilter();
+//	    Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
+//	}
+
 	@When("I shortlist the first property from the listing")
 	public void i_shortlist_the_first_property_from_the_listing() {
 		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
@@ -42,5 +49,10 @@ public class ShortlistProperty extends BaseSteps {
 		boolean actResult = shortlistPage.clickFirstShortlistedProperty();
         Assert.assertTrue(actResult, "Failed to click on the shortlisted property.");
     }
+	@Then("I validate the contact agent in the property page")
+	public void I_validate_the_contact_agent_in_the_property_page() {
+		boolean actResult = shortlistPage.viewcontactAgentIsPresent();
+        Assert.assertTrue(actResult, "View contact Agent element is not present on the page:");
+	}
 
 }

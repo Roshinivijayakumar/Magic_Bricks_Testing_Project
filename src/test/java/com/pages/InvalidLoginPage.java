@@ -26,7 +26,7 @@ public class InvalidLoginPage {
 
     public InvalidLoginPage(WebDriver driver, ExtentTest extTest) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         this.extTest = extTest;
     }
     
@@ -245,6 +245,4 @@ public class InvalidLoginPage {
             return false;
         }
     }
-
-
 }

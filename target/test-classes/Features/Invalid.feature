@@ -1,5 +1,6 @@
 @InvalidLogin
 Feature: Invalid Login Scenarios
+
   Scenario Outline: Login with invalid mobile number
     Given I am on the homepage of magicbricks
     When I click on the login button of home page

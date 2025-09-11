@@ -1,0 +1,59 @@
+# -------------------------
+# Maven specific
+# -------------------------
+target/
+*.jar
+*.war
+*.ear
+dependency-reduced-pom.xml
+
+# Maven test reports
+surefire-reports/
+failsafe-reports/
+
+# -------------------------
+# Eclipse specific
+# -------------------------
+.classpath
+.project
+.settings/
+
+# -------------------------
+# IntelliJ IDEA
+# -------------------------
+.idea/
+*.iml
+
+# -------------------------
+# VS Code
+# -------------------------
+.vscode/
+
+# -------------------------
+# Generated reports & logs
+# -------------------------
+screenshots/
+logs/
+*.log
+
+# -------------------------
+# Temporary / OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# -------------------------
+# HTML/XML reports
+# -------------------------
+*.html
+*.xml
+*.png
+# -------------------------
+# Compiled Java classes
+# -------------------------
+*.class

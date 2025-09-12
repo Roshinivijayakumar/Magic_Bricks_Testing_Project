@@ -1,3 +1,4 @@
+@Login
 Feature:Test Buying a property 
 Scenario Outline:Get the details of the property and owner successfully
 Given I launch the magicbricks website

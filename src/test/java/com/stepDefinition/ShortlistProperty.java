@@ -1,5 +1,9 @@
 package com.stepDefinition;
 
+import java.time.Duration;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.aventstack.extentreports.ExtentTest;
@@ -17,33 +21,49 @@ public class ShortlistProperty extends BaseSteps {
 	public void the_user_is_on_the_property_listing_page() {
 	    
 	}
-//	@Given("clicks on sortby and selects most recent filter")
-//	public void clicks_on_sortby_and_selects_most_recent_filter() {
-//		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
-//		boolean actResult = shortlistPage.sortByFilter();
-//		Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
-//	}
-//	@When("clicks on sortby and selects most recent filter")
-//	public void clicks_on_sortby_and_selects_most_recent_filter() {
-//	    shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
-//	    boolean actResult = shortlistPage.sortByFilter();
-//	    Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
-//	}
-
+	@Given("clicks on sortby and selects most recent filter")
+	public void clicks_on_sortby_and_selects_most_recent_filter() {
+		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
+		boolean actResult = shortlistPage.sortByFilter();
+		Assert.assertTrue(actResult, "Failed to select sortby mostrecent filter.");
+	}
 	@When("I shortlist the first property from the listing")
 	public void i_shortlist_the_first_property_from_the_listing() {
 		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
         boolean actResult = shortlistPage.shortlistPropertyFromList();
         Assert.assertTrue(actResult, "Failed to shortlist the first property from the listing.");
 	   
-	}
+	} 
+//	@When("I view the shortlisted properties")
+//	public void i_view_the_shortlisted_properties() {
+//		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
+//        boolean actResult = shortlistPage.viewShortlistedProperties();
+//        Assert.assertTrue(actResult, "Failed to view shortlisted properties.");
+//        
+//	}
+	
 	@When("I view the shortlisted properties")
 	public void i_view_the_shortlisted_properties() {
-		shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
-        boolean actResult = shortlistPage.viewShortlistedProperties();
-        Assert.assertTrue(actResult, "Failed to view shortlisted properties.");
-        
+	    shortlistPage = new ShortlistPropertyPage(driver, Hooks.extTest);
+	    
+	    boolean actResult = shortlistPage.viewShortlistedProperties();
+	    Assert.assertTrue(actResult, "Failed to view shortlisted properties.");
+
+	    // Switch to new tab
+	    String originalWindow = driver.getWindowHandle();
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    wait.until(driver -> driver.getWindowHandles().size() > 1);
+
+	    for (String windowHandle : driver.getWindowHandles()) {
+	        if (!windowHandle.equals(originalWindow)) {
+	            driver.switchTo().window(windowHandle);
+	            break;
+	        }
+	    }
+
+	    wait.until(ExpectedConditions.urlContains("shortlist"));
 	}
+
 	@Then("I click on property")
 	public void i_click_on_property() {
 		boolean actResult = shortlistPage.clickFirstShortlistedProperty();

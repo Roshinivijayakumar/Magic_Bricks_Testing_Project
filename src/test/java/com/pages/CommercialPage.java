@@ -11,12 +11,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.objectrepository.Locators;
+
 import com.setup.Reporter;
 
 
 public class CommercialPage {
-
+	public static By commercialTab = By.xpath("//*[@id=\"tabCOMM\"]");
+	public static By leaseOption = By.xpath("//*[@id=\"commercialTypeDropdown\"]/div[2]");
+	public static By leaseDropdown = By.xpath("//*[@id=\"commercialType\"]");
+	public static By enterlocation = By.id("keyword");
+	public static By crossloc =By.xpath("//*[@id=\"keyword_autoSuggestSelectedDiv\"]/div/div[2]");
+    public static By selectdropdownloc = By.xpath("//div[@class='mb-search__auto-suggest__item' and contains(@onclick,'Chennai')]");
+    public static By clickPropertType1 = By.xpath("//*[@id=\"propType_rent\"]/div[1]");
+    public static By selectPropertyType1 =By.xpath("//label[text()='Office Space']");
+    public static By closePropertyType1= By.xpath("//body");
+    public static By minPrice1 = By.xpath("//*[@id='minBudjet']/div[12]");
+    public static By maxPrice1 = By.id("maxBhkIndex_12");
+    public static By closeBudget1 = By.xpath("//body");
+    public static By searchButton1 = By.xpath("//*[@id=\"commercialIndex\"]/section[1]/div/div[1]/div[3]/div[5]");
+    public static By searchButton = By.xpath("//*[@id=\"searchFormHolderSection\"]/section/div/div[1]/div[3]/div[4]");
+    public static By clickBudget1 = By.id("rent_budget_lbl"); 
+    
     private WebDriver driver;
     private WebDriverWait wait;
     private ExtentTest extTest;
@@ -27,70 +42,52 @@ public class CommercialPage {
         this.extTest = extTest;
     }
 
-    // Enter location
-    /**
-     * Clicks the close button to remove the default location.
-     * @return true if the close button is clicked successfully, false otherwise.
-     */
     public CommercialPage(WebDriver driver) {
         this.driver = driver;
     }
 
     public void clickCommercialTab() {
-        driver.findElement(Locators.commercialTab).click();
+        driver.findElement(commercialTab).click();
     }
     
     public void selectLease() {
-    	driver.findElement(Locators.leaseDropdown).click();
-        driver.findElement(Locators.leaseOption).click();
+    	driver.findElement(leaseDropdown).click();
+        driver.findElement(leaseOption).click();
     }
     
+       //use below code for invalid location test 
     public boolean enterLocation1(String location) {
         try {
-        	
-            WebElement locationBox = wait.until(ExpectedConditions.elementToBeClickable(Locators.enterlocation));
-            locationBox.sendKeys(location);
-            Reporter.generateReport(driver, extTest, Status.PASS, "Entered location: " + location);
-            return true;
-        } catch (Exception e) {
-            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to enter location: " + e.getMessage());
-            return false;
-        }
+    		  
+    		  WebElement locationBox = wait.until(ExpectedConditions.elementToBeClickable(enterlocation));
+    		  ((JavascriptExecutor) driver).executeScript("arguments[0].click();", locationBox); 
+    		  WebElement locationBox1 =wait.until(ExpectedConditions.elementToBeClickable(crossloc));
+    		  ((JavascriptExecutor) driver).executeScript("arguments[0].click();",locationBox1); 
+    		  locationBox.clear(); 
+    		  locationBox.sendKeys(location);
+    		  
+    		  //use the below when you need for valid location
+    		  WebElement locationBox2 =wait.until(ExpectedConditions.elementToBeClickable(selectdropdownloc));
+    		  ((JavascriptExecutor) driver).executeScript("arguments[0].click();",locationBox2); 
+    		  
+    		  Reporter.generateReport(driver, extTest, Status.PASS, "Entered location: " +
+    		  location); return true; } catch (Exception e) {
+    		  Reporter.generateReport(driver, extTest, Status.FAIL,
+    		  "Failed to enter location: " + e.getMessage()); return false;
+    		  
+    	
     }
-//    
-    //use below code for invalid location test
-//    public boolean enterLocation1(String location) {
-//        try {
-//    		  
-//    		  WebElement locationBox = wait.until(ExpectedConditions.elementToBeClickable(Locators.enterlocation));
-//    		  ((JavascriptExecutor) driver).executeScript("arguments[0].click();", locationBox); 
-//    		  WebElement locationBox1 =wait.until(ExpectedConditions.elementToBeClickable(Locators.crossloc));
-//    		  ((JavascriptExecutor) driver).executeScript("arguments[0].click();",locationBox1); 
-//    		  locationBox.clear(); 
-//    		  locationBox.sendKeys(location);
-//    		//  WebElement locationBox2 =wait.until(ExpectedConditions.elementToBeClickable(Locators.selectdropdownloc));
-//    		 // ((JavascriptExecutor) driver).executeScript("arguments[0].click();",locationBox2); 
-//
-//
-//    		  
-//    		  Reporter.generateReport(driver, extTest, Status.PASS, "Entered location: " +
-//    		  location); return true; } catch (Exception e) {
-//    		  Reporter.generateReport(driver, extTest, Status.FAIL,
-//    		  "Failed to enter location: " + e.getMessage()); return false;
-//    		  
-//    	
-//    }
-//    }
+    }
     
     public boolean selectPropertyType1() {
         try {
             // Step 1: Open dropdown
-            WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(Locators.clickPropertType1));
+            WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(clickPropertType1));
             dropdown.click();
             Reporter.generateReport(driver, extTest, Status.INFO, "Opened Property Type dropdown");
 
             // Step 2: Select Office Space (checkbox)
-            WebElement option = wait.until(ExpectedConditions.presenceOfElementLocated(Locators.selectPropertyType1));
+            WebElement option = wait.until(ExpectedConditions.presenceOfElementLocated(selectPropertyType1));
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", option);
             Reporter.generateReport(driver, extTest, Status.INFO, "Selected 'Office Space'");
 
@@ -108,7 +105,7 @@ public class CommercialPage {
     public boolean selectBudget1() {
         try {
             // Open budget dropdown
-            WebElement budgetDropdown = wait.until(ExpectedConditions.elementToBeClickable(Locators.clickBudget1));
+            WebElement budgetDropdown = wait.until(ExpectedConditions.elementToBeClickable(clickBudget1));
             budgetDropdown.click();
 
             try {
@@ -125,11 +122,11 @@ public class CommercialPage {
 
             } catch (Exception sendKeysFailed) {
                 // --- Fallback to scroll + click ---
-                WebElement minPrice = wait.until(ExpectedConditions.presenceOfElementLocated(Locators.minPrice1));
+                WebElement minPrice = wait.until(ExpectedConditions.presenceOfElementLocated(minPrice1));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", minPrice);
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", minPrice);
 
-                WebElement maxPrice = wait.until(ExpectedConditions.presenceOfElementLocated(Locators.maxPrice1));
+                WebElement maxPrice = wait.until(ExpectedConditions.presenceOfElementLocated(maxPrice1));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", maxPrice);
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", maxPrice);
 
@@ -137,7 +134,7 @@ public class CommercialPage {
             }
 
             // Close dropdown (click outside)
-            WebElement close = wait.until(ExpectedConditions.elementToBeClickable(Locators.closeBudget1));
+            WebElement close = wait.until(ExpectedConditions.elementToBeClickable(closeBudget1));
             close.click();
 
             Reporter.generateReport(driver, extTest, Status.PASS, "Budget range selected successfully (Min ₹1 Lac, Max ₹1.5 Lac)");
@@ -152,7 +149,7 @@ public class CommercialPage {
     public boolean clickSearch1() {
         try {
             WebElement searchBtn = wait.until(
-                ExpectedConditions.presenceOfElementLocated(Locators.searchButton1)
+                ExpectedConditions.presenceOfElementLocated(searchButton1)
             );
 
             // scroll into view
@@ -173,7 +170,7 @@ public class CommercialPage {
     public boolean clickSearch2() {
         try {
             WebElement searchBtn = wait.until(
-                ExpectedConditions.presenceOfElementLocated(Locators.searchButton)
+                ExpectedConditions.presenceOfElementLocated(searchButton)
             );
 
             // scroll into view

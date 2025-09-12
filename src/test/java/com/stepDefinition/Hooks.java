@@ -1,12 +1,111 @@
+//package com.stepDefinition;
+//
+//import java.io.File;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//
+//import org.openqa.selenium.OutputType;
+//import org.openqa.selenium.TakesScreenshot;
+//import org.openqa.selenium.io.FileHandler;
+//
+//import com.aventstack.extentreports.ExtentReports;
+//import com.aventstack.extentreports.ExtentTest;
+//import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+//import com.setup.BaseSteps;
+//
+//import io.cucumber.java.After;
+//import io.cucumber.java.AfterAll;
+//import io.cucumber.java.AfterStep;
+//import io.cucumber.java.Before;
+//import io.cucumber.java.BeforeAll;
+//import io.cucumber.java.Scenario;
+//
+//public class Hooks extends BaseSteps {
+//
+//    static ExtentSparkReporter spark;
+//    static ExtentReports extReports;
+//    public static ExtentTest extTest;
+//    public static int currentrow = 0;
+//
+//   	public static int firstrow;
+//    @BeforeAll
+//    public static void setUpReportsAndBrowser() {
+//        cleanOldReports();
+//
+//        // Setup Extent Reports
+//        spark = new ExtentSparkReporter("reports/ExtentReports.html");
+//        extReports = new ExtentReports();
+//        extReports.attachReporter(spark);
+//
+//        // Launch browser once
+//        if (driver == null) {
+//            launchBrowser();
+//            System.out.println("Browser launched once via @BeforeAll");
+//        }
+//    }
+//
+//    public static void cleanOldReports() {
+//        File reportsDir = new File("reports");
+//        if (reportsDir.exists()) {
+//            for (File file : reportsDir.listFiles()) {
+//                file.delete();
+//            }
+//        }
+//    }
+//
+//    @Before
+//    public void setUpScenario(Scenario scenario) {
+//        // Create a test entry in Extent for each scenario
+//        extTest = extReports.createTest(scenario.getName());
+//    }
+//
+//    // 📌 Step-level screenshots: captured immediately when a step fails
+//    @AfterStep
+//    public void captureStepScreenshot(Scenario scenario) {
+//        if (scenario.isFailed() && driver != null) {
+//            saveScreenshot(scenario);
+//        }
+//    }
+//
+//    //  Helper for screenshots
+//    private void saveScreenshot(Scenario scenario) {
+//        try {
+//            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+//
+//            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//            String fileName = scenario.getName().replace(" ", "_") 
+//                              + "_step_" + timestamp + ".png";
+//            String path = "reports/screenshots/" + fileName;
+//
+//            File dest = new File(path);
+//            dest.getParentFile().mkdirs();
+//            FileHandler.copy(src, dest);
+//
+//            // Attach screenshot to Extent report
+//            extTest.addScreenCaptureFromPath(path);
+//            extTest.fail("Screenshot captured for failed step: " + scenario.getName());
+//
+//        } catch (Exception e) {
+//            extTest.fail("Failed to capture screenshot: " + e.getMessage());
+//        }
+//    }
+//
+//    @AfterAll
+//    public static void afterAll() {
+//       /* if (driver != null) {
+//            driver.quit();
+//            System.out.println("Browser closed after all tests");
+//        }*/
+//        extReports.flush();
+//    }
+//}
+
+
+
+
 package com.stepDefinition;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.io.FileHandler;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -15,7 +114,6 @@ import com.setup.BaseSteps;
 
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
-import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.Scenario;
@@ -28,22 +126,25 @@ public class Hooks extends BaseSteps {
     public static int currentrow = 0;
 
    	public static int firstrow;
+
     @BeforeAll
     public static void setUpReportsAndBrowser() {
-        cleanOldReports();
-
-        // Setup Extent Reports
+        //  Setup reports (✅ changed path here)
         spark = new ExtentSparkReporter("reports/ExtentReports.html");
         extReports = new ExtentReports();
         extReports.attachReporter(spark);
 
-        // Launch browser once
+        // Debug log to check exact location
+        System.out.println("ExtentReport will be saved at: " + 
+            new File("reports/ExtentReports.html").getAbsolutePath());
+
+        //  Launch browser once for all features
         if (driver == null) {
             launchBrowser();
-            System.out.println("Browser launched once via @BeforeAll");
+            System.out.println("Browser launched once via @BeforeAll ");
         }
     }
-
+    
     public static void cleanOldReports() {
         File reportsDir = new File("reports");
         if (reportsDir.exists()) {
@@ -51,69 +152,36 @@ public class Hooks extends BaseSteps {
                 file.delete();
             }
         }
-    }
 
-    @Before
-    public void setUpScenario(Scenario scenario) {
-        // Create a test entry in Extent for each scenario
-        extTest = extReports.createTest(scenario.getName());
-    }
-//    @Before
-//    public void setUpScenario(Scenario scenario) {
-//        extTest = extReports.createTest(scenario.getName());
-//
-//        launchBrowser();
-//        driver.get("https://www.magicbricks.com/");
-//        System.out.println("🔄 Browser launched fresh for: " + scenario.getName());
-//    }
-//
-//    @After
-//    public void tearDownScenario() {
-//        if (driver != null) {
-//            driver.quit();
-//            driver = null;
-//            System.out.println("✅ Browser closed after scenario");
-//        }
-//    }
-
-
-    // 📌 Step-level screenshots: captured immediately when a step fails
-    @AfterStep
-    public void captureStepScreenshot(Scenario scenario) {
-        if (scenario.isFailed() && driver != null) {
-            saveScreenshot(scenario);
-        }
-    }
-
-    //  Helper for screenshots
-    private void saveScreenshot(Scenario scenario) {
-        try {
-            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String fileName = scenario.getName().replace(" ", "_") 
-                              + "_step_" + timestamp + ".png";
-            String path = "reports/screenshots/" + fileName;
-
-            File dest = new File(path);
-            dest.getParentFile().mkdirs();
-            FileHandler.copy(src, dest);
-
-            // Attach screenshot to Extent report
-            extTest.addScreenCaptureFromPath(path);
-            extTest.fail("Screenshot captured for failed step: " + scenario.getName());
-
-        } catch (Exception e) {
-            extTest.fail("Failed to capture screenshot: " + e.getMessage());
+        File targetDir = new File("target");
+        if (targetDir.exists()) {
+            for (File file : targetDir.listFiles()) {
+                file.delete();
+            }
         }
     }
 
     @AfterAll
     public static void afterAll() {
-       /* if (driver != null) {
+        if (driver != null) {
             driver.quit();
-            System.out.println("Browser closed after all tests");
-        }*/
-        extReports.flush();
+            System.out.println("Browser closed after all tests ");
+        }
+        if (extReports != null) {   // ✅ added null check to ensure flush runs safely
+            extReports.flush();
+            System.out.println("Extent report generated!");
+        }
+    }
+
+    @Before
+    public void setUpScenario(Scenario scenario) {
+        // Create test entry for reporting per scenario
+        extTest = extReports.createTest(scenario.getName());
+    }
+
+    @After
+    public void tearDownScenario(Scenario scenario) {
+        // Add delay if needed (optional)
+        BaseSteps.sleep();
     }
 }

@@ -2,20 +2,58 @@ package com.pages;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.objectrepository.Locators;
+//import com.objectrepository.Locators;
 import com.setup.Reporter;
 
 public class ShortlistPropertyPage {
+	
+
+//	public static By contactAgent = By.xpath("//div[@class='mb-ldp__contact-info__title--text1' and normalize-space(text())='Contact Owner']");
+//	public static By viewShortlistBtn = By.xpath("//a[contains(@class,'shortlist-drop__link') and normalize-space(text())='View Your Shortlisted Properties']");
+//	public static By shortlistTabHeader = By.xpath("//li[@id='m-tab-Shortlisted' and normalize-space(text())='Shortlisted']");
+//	public static By shortlistedPropertyCard = By.xpath("//div[@id='propertiesAction80571739']/ancestor::div[contains(@class,'mb-srp__card')]");
+//	public static By shortlistButton = By.xpath("//span[@class='mb-srp__card__sort--icon']");
+//	public static By mainshortlistbtn = By.xpath("//span[@class='mb-header__main__shortlist__cta']");
+//	public static By sortBy = By.xpath("//div[@class='mb-srp__tabs__sortby--title']");
+//	public static By mostrecent = By.xpath("//li[contains(@class,'mb-srp__tabs__sortby__dd__list--item') and normalize-space(text())='Most Recent']");
+
+	// Contact Owner / Agent
+	public static By contactAgent = By.xpath("//div[contains(@class,'contact-info__title') and contains(.,'Contact')]");
+
+	// View Shortlist Button
+	public static By viewShortlistBtn = By.xpath("//a[contains(.,'View Your Shortlisted Properties')]");
+
+	// Shortlisted Tab Header
+	public static By shortlistTabHeader = By.xpath("//li[contains(@id,'Shortlisted') and normalize-space(text())='Shortlisted']");
+
+	// First Shortlisted Property Card
+//	public static By shortlistedPropertyCard = By.xpath("(//div[contains(@class,'mb-srp__card')])[1]");
+	// First shortlisted property card in Shortlist Tab
+	public static By shortlistedPropertyCard = By.xpath("(//div[@class='shortlist-wrapper']//div[contains(@class,'mb-srp__card')])[1]");
+
+	// Shortlist (Heart) Icon inside card
+	public static By shortlistButton = By.xpath("//span[contains(@class,'mb-srp__card__sort--icon')]");
+
+	// Main Shortlist Button (top header)
+	public static By mainshortlistbtn = By.xpath("//div[contains(@class,'mb-header__main__shortlist')]//span[contains(@class,'shortlist__cta')]");
+
+	// Sort By dropdown
+	public static By sortBy = By.xpath("//div[contains(@class,'mb-srp__tabs__sortby--title')]");
+
+	// Sort By → Most Recent option
+	public static By mostrecent = By.xpath("//li[contains(.,'Most Recent')]");
+
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -32,84 +70,38 @@ public class ShortlistPropertyPage {
      * and validates the page title.
      * @return true if the action is successful, false otherwise.
      */
-//    public boolean viewShortlistedProperties() {
-//        try {
-//            WebElement viewShortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(Locators.viewShortlistBtn));
-//            viewShortlistBtn.click();
-//            
-//            // Get all window handles
-//            Set<String> allWindowHandles = driver.getWindowHandles();
-//            ArrayList<String> tabs = new ArrayList<>(allWindowHandles);
-//            
-//            // Switch to the new tab (assuming it's the second one)
-//            if (tabs.size() > 3) {
-//                driver.switchTo().window(tabs.get(2));
-//                Reporter.generateReport(driver, extTest, Status.PASS, "Shortlisted Property page. Current URL: " + driver.getCurrentUrl());
-//            } else {
-//                Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to switch to a new tab. Only one tab was found.");
-//                return false;
-//            }
-//
-//            // Validate the presence of the new tab's header using the specific locator
-//            WebElement shortlistedTabHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.shortlistTabHeader));
-//            if (shortlistedTabHeader.isDisplayed()) {
-//                Reporter.generateReport(driver, extTest, Status.PASS, "Successfully navigated to the shortlisted properties");
-//                return true;
-//            } else {
-//                Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to navigate to the shortlisted properties page. Header not found.");
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to view shortlisted properties: " + e.getMessage());
-//            return false;
-//        }
-//    }
     public boolean viewShortlistedProperties() {
         try {
-            // Step 1: Capture existing tabs
-            List<String> originalTabs = new ArrayList<>(driver.getWindowHandles());
-            if (originalTabs.size() < 3) {
-                Reporter.generateReport(driver, extTest, Status.FAIL, "Expected at least 3 tabs to be open before clicking.");
-                return false;
-            }
-
-            // Step 2: Switch to the 3rd tab (index 2)
-            driver.switchTo().window(originalTabs.get(2));
-
-            // Step 3: Click the button that opens the 4th tab
-            WebElement viewShortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(Locators.viewShortlistBtn));
-            viewShortlistBtn.click();
-
-            // Step 4: Wait until a new tab appears (4th tab)
-            wait.until(driver -> driver.getWindowHandles().size() > originalTabs.size());
-
-            // Step 5: Identify the new tab
+            WebElement viewShortlistBtn1 = wait.until(ExpectedConditions.elementToBeClickable( viewShortlistBtn));
+            viewShortlistBtn1.click();
+         
+            // Get all window handles
             Set<String> allWindowHandles = driver.getWindowHandles();
-            allWindowHandles.removeAll(originalTabs); // Get only the new tab
-            if (allWindowHandles.size() != 1) {
-                Reporter.generateReport(driver, extTest, Status.FAIL, "Unexpected number of new tabs opened.");
+            ArrayList<String> tabs = new ArrayList<>(allWindowHandles);
+            
+            // Switch to the new tab (assuming it's the second one)
+            if (tabs.size() > 1) {
+                driver.switchTo().window(tabs.get(tabs.size()-1));
+                Reporter.generateReport(driver, extTest, Status.PASS, "Shortlisted Property page. Current URL: " + driver.getCurrentUrl());
+            } else {
+                Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to switch to a new tab. Only one tab was found.");
                 return false;
             }
 
-            String newTab = allWindowHandles.iterator().next();
-            driver.switchTo().window(newTab);
-
-            // Step 6: Validate presence of element in the new tab
-            WebElement shortlistedTabHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.shortlistTabHeader));
+            // Validate the presence of the new tab's header using the specific locator
+            WebElement shortlistedTabHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(shortlistTabHeader));
             if (shortlistedTabHeader.isDisplayed()) {
-                Reporter.generateReport(driver, extTest, Status.PASS, "Successfully navigated to the shortlisted properties in the 4th tab.");
+                Reporter.generateReport(driver, extTest, Status.PASS, "Successfully navigated to the shortlisted properties");
                 return true;
             } else {
-                Reporter.generateReport(driver, extTest, Status.FAIL, "Header not found in the newly opened tab.");
+                Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to navigate to the shortlisted properties page. Header not found.");
                 return false;
             }
-
         } catch (Exception e) {
             Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to view shortlisted properties: " + e.getMessage());
             return false;
         }
     }
-
 
     /**
      * Clicks on the first shortlisted property in the listing.
@@ -118,8 +110,22 @@ public class ShortlistPropertyPage {
     public boolean clickFirstShortlistedProperty() {
         try {
             // Use the more specific locator for the first property
-            WebElement firstProperty = wait.until(ExpectedConditions.elementToBeClickable(Locators.shortlistedPropertyCard));
+            WebElement firstProperty = wait.until(ExpectedConditions.elementToBeClickable(shortlistedPropertyCard));
             firstProperty.click();
+            Set<String> allWindowHandles = driver.getWindowHandles();
+            ArrayList<String> tabs = new ArrayList<>(allWindowHandles);
+            
+            if (tabs.size() > 1) {
+                driver.switchTo().window(tabs.get(tabs.size()-1));
+                Reporter.generateReport(driver, extTest, Status.PASS, "Switched to the property details tab.Current URL: " + driver.getCurrentUrl());
+            } else {
+                Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to switch to the property details tab.");
+                return false;
+            }
+
+            
+            
+        
             Reporter.generateReport(driver, extTest, Status.PASS, "Selected first shortlisted property.");
             return true;
         } catch (Exception e) {
@@ -128,10 +134,11 @@ public class ShortlistPropertyPage {
         }
     }
 //    public boolean sortByFilter() {
+//    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 //    	try {
-//    		WebElement shortlistBtn1 = wait.until(ExpectedConditions.elementToBeClickable(Locators.sortBy));
+//    		WebElement shortlistBtn1 = wait.until(ExpectedConditions.elementToBeClickable(sortBy));
 //    	    shortlistBtn1.click();
-//    	    WebElement shortlistBtn2 = wait.until(ExpectedConditions.elementToBeClickable(Locators.mostrecent));
+//    	    WebElement shortlistBtn2 = wait.until(ExpectedConditions.elementToBeClickable(mostrecent));
 //    	    shortlistBtn2.click();
 //    	    Reporter.generateReport(driver, extTest, Status.PASS, "Sortby most recent filter clicked");
 //            return true;
@@ -141,55 +148,90 @@ public class ShortlistPropertyPage {
 //             return false;
 //    	 }
 //    }
-//    public boolean sortByFilter() {
+
+//    public boolean shortlistPropertyFromList() {
 //        try {
-//            // Wait for Sort By dropdown
-//            WebElement sortBy = wait.until(ExpectedConditions.elementToBeClickable(Locators.sortBy));
-//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sortBy);
-//            sortBy.click();
-//            Reporter.generateReport(driver, extTest, Status.INFO, "Clicked on Sort By dropdown");
+//            WebElement shortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(shortlistButton));
+//            
+//            // In case it only shows on hover
+//            Actions actions = new Actions(driver);
+//            actions.moveToElement(shortlistBtn).perform();        
+//            shortlistBtn.click();
+//    
+//            WebElement mainShortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(mainshortlistbtn));
+//            mainShortlistBtn.click();
 //
-//            // Wait for "Most Recent" option and click
-//            WebElement mostRecent = wait.until(ExpectedConditions.elementToBeClickable(Locators.mostrecent));
-//            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", mostRecent);
-//
-//            Reporter.generateReport(driver, extTest, Status.PASS, "Sort By filter set to Most Recent");
+//            Reporter.generateReport(driver, extTest, Status.PASS, "Successfully clicked the main shortlist button.");
 //            return true;
 //        } catch (Exception e) {
-//            Reporter.generateReport(driver, extTest, Status.FAIL,
-//                "Failed to select Sort By → Most Recent: " + e.getMessage());
+//            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click the main shortlist button: " + e.getMessage());
 //            return false;
 //        }
 //    }
-
-    public boolean shortlistPropertyFromList() {
+    public boolean sortByFilter() {
         try {
-        	   
-          	WebElement shortlistBtn1=wait.until(ExpectedConditions.elementToBeClickable(Locators.shortlistButton));
-          	shortlistBtn1.click();
-            WebElement shortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(Locators.mainshortlistbtn));
-            shortlistBtn.click();
-            
-            Reporter.generateReport(driver, extTest, Status.PASS, "Successfully clicked the main shortlist button.");
+            // Click Sort By dropdown
+            WebElement sortDropdown = wait.until(ExpectedConditions.elementToBeClickable(sortBy));
+            sortDropdown.click();
+
+            // Click Most Recent option
+            WebElement mostRecentOption = wait.until(ExpectedConditions.elementToBeClickable(mostrecent));
+            mostRecentOption.click();
+
+            // Wait until the property list is refreshed
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(
+                By.xpath("//div[contains(@class,'loader')]"))); // loader if present
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("(//div[contains(@class,'mb-srp__card')])[1]")));
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Sort By 'Most Recent' applied and listing reloaded.");
             return true;
         } catch (Exception e) {
-            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click the main shortlist button: " + e.getMessage());
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to apply Sort By Most Recent: " + e.getMessage());
             return false;
         }
     }
+
+    public boolean shortlistPropertyFromList() {
+        try {
+            // Ensure first property card is visible
+            WebElement firstProperty = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("(//div[contains(@class,'mb-srp__card')])[1]")));
+
+            // Now hover + click shortlist
+            WebElement shortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(shortlistButton));
+            new Actions(driver).moveToElement(firstProperty).perform();
+            shortlistBtn.click();
+
+            WebElement mainShortlistBtn = wait.until(ExpectedConditions.elementToBeClickable(mainshortlistbtn));
+            mainShortlistBtn.click();
+
+            Reporter.generateReport(driver, extTest, Status.PASS, "Successfully shortlisted the first property.");
+            return true;
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to shortlist property: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    
     public boolean viewcontactAgentIsPresent() {
-     	try {
-        	 WebElement contactagent = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.contactAgent));
-             if (contactagent.isDisplayed()) {
-                 Reporter.generateReport(driver, extTest, Status.PASS, "View contact Agent element is present on the page:");
-                 return true;
-             } else {
-                 Reporter.generateReport(driver, extTest, Status.FAIL, "View contact Agent element is not present on the page:");
-                 return false;
-             }
-         } catch (Exception e) {
-             Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to view shortlisted properties: " + e.getMessage());
-             return false;
-         }
+    	
+    	try {
+       	 WebElement contactagent = wait.until(ExpectedConditions.visibilityOfElementLocated(contactAgent));
+            if (contactagent.isDisplayed()) {
+                Reporter.generateReport(driver, extTest, Status.PASS, "View contact Agent element is present on the page:");
+                return true;
+            } else {
+                Reporter.generateReport(driver, extTest, Status.FAIL, "View contact Agent element is not present on the page:");
+                return false;
+            }
+        } catch (Exception e) {
+            Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to view shortlisted properties: " + e.getMessage());
+            return false;
+        }
+    	
     }
 }
